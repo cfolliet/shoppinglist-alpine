@@ -22,7 +22,7 @@
 </head>
 
 <body>
-    <div id="app" x-data="data">
+    <div id="app" x-data="data" x-init="() => { registerSwipe() }">
         <div class="mdl-textfield mdl-js-textfield">
             <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
             <label class="mdl-textfield__label" for="keyword">Item...</label>
@@ -31,9 +31,9 @@
             <i class="material-icons">add</i>
         </button>
 
-        <ul class="mdl-list">
+        <ul class="mdl-list" x-on:click.once="update">
             <template x-for="item in items" :key="item">
-                <li class="mdl-list__item" x-on:click="update">
+                <li class="mdl-list__item">
                     <span class="mdl-list__item-primary-content">
                         <span x-text="item.name"></span>
                         <span x-text="item.checked"></span>

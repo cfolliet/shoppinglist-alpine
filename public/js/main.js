@@ -16,17 +16,20 @@ const data = {
 
 function registerSwipe() {
     const list = document.querySelector('ul');
-    var manager = new Hammer.Manager(list);
-    var Swipe = new Hammer.Swipe();
+    let manager = new Hammer.Manager(list);
+    let Swipe = new Hammer.Swipe();
     manager.add(Swipe);
     manager.on('swipe', function (e) {
         if (e.offsetDirection === 4 || e.offsetDirection === 2) { // todo replace the if with direction option on swipe
-            const li = e.target.nodeName == 'LI' ? e.target : e.target.parentNode;
+            const li = e.target.closest('li');
             const items = [...document.querySelectorAll('li')];
             const index = items.indexOf(li);
             data.items[index].checked = !data.items[index].checked;
         }
     });
+    let Press = new Hammer.Press();
+    manager.add(Press);
+    manager.on('press', function (e) {
+        console.log('press')
+    })
 }
-
-setTimeout(registerSwipe, 100) //remove this timeout and register at the good moment
