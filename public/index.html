@@ -27,16 +27,19 @@
             <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
             <label class="mdl-textfield__label" for="keyword">Item...</label>
         </div>
-        <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab">
+        <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
             <i class="material-icons">add</i>
         </button>
 
         <ul class="mdl-list" x-on:click.once="update">
-            <template x-for="item in items" :key="item">
-                <li class="mdl-list__item">
+            <template x-for="(item, index) in items" :key="item">
+                <li class="mdl-list__item" x-bind:data-index="index">
                     <span class="mdl-list__item-primary-content">
                         <span x-text="item.name"></span>
                         <span x-text="item.checked"></span>
+                        <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                            <i class="material-icons">delete</i>
+                        </button>
                     </span>
                 </li>
             </template>

@@ -1,12 +1,15 @@
 const data = {
     keyword: 'keyword',
     items: [
-        { name: 'aaaa', checked: false },
-        { name: 'bbb', checked: true },
-        { name: 'cc', checked: false }
+        { name: 'aaaa', checked: false, hover: false },
+        { name: 'bbb', checked: true, hover: false },
+        { name: 'cc', checked: false, hover: false }
     ],
     add: function () {
         this.items.push({ name: this.keyword, checked: false });
+    },
+    remove: function (index) {
+        this.items.splice(index, 1);
     },
     update: function () {
         // trick to refresh data when modified from the js
@@ -21,15 +24,14 @@ function registerSwipe() {
     manager.add(Swipe);
     manager.on('swipe', function (e) {
         if (e.offsetDirection === 4 || e.offsetDirection === 2) { // todo replace the if with direction option on swipe
-            const li = e.target.closest('li');
-            const items = [...document.querySelectorAll('li')];
-            const index = items.indexOf(li);
-            data.items[index].checked = !data.items[index].checked;
+            const item = data.items[e.target.closest('li').getAttribute('data-index')];
+            item.checked = !item.checked;
         }
     });
     let Press = new Hammer.Press();
     manager.add(Press);
     manager.on('press', function (e) {
-        console.log('press')
+        const item = data.items[e.target.closest('li').getAttribute('data-index')];
+        item.hover = !item.hover;
     })
 }
