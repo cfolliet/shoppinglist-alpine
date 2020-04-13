@@ -1,0 +1,23 @@
+{
+  "name": "shoppinglist-alpine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve ./public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfolliet/shoppinglist-alpine.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cfolliet/shoppinglist-alpine/issues"
+  },
+  "homepage": "https://github.com/cfolliet/shoppinglist-alpine#readme",
+  "dependencies": {
+    "serve": "^11.3.0"
+  }
+}
