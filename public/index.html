@@ -2,23 +2,41 @@
 
 <head>
     <title>Shopping List</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://www.gstatic.com/firebasejs/5.9.4/firebase.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/5.9.3/firebase-firestore.js"></script>
+
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
     <script src="js/main.js"></script>
 </head>
 
 <body>
     <div id="app" x-data="data">
-        <input type="text" x-model="keyword">
-        <button x-on:click="add">Add</button>
-        <template x-for="item in items" :key="item">
-            <div>
-                <span x-text="item.name"></span>
-                <span x-text="item.checked"></span>
-            </div>
-        </template>
+        <div class="mdl-textfield mdl-js-textfield">
+            <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
+            <label class="mdl-textfield__label" for="keyword">Item...</label>
+        </div>
+        <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab">
+            <i class="material-icons">add</i>
+        </button>
+
+        <ul class="mdl-list">
+            <template x-for="item in items" :key="item">
+                <li class="mdl-list__item">
+                    <span class="mdl-list__item-primary-content">
+                        <span x-text="item.name"></span>
+                        <span x-text="item.checked"></span>
+                    </span>
+                </li>
+            </template>
+        </ul>
     </div>
 </body>
 
