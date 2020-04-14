@@ -19,6 +19,13 @@
         integrity="sha256-eVNjHw5UeU0jUqPPpZHAkU1z4U+QFBBY488WvueTm88=" crossorigin="anonymous"></script>
 
     <script src="js/main.js"></script>
+
+    <style>
+        .checked {
+          opacity: 0.5;  
+          text-decoration: line-through;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,8 +42,7 @@
             <template x-for="(item, index) in items" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="index">
                     <span class="mdl-list__item-primary-content">
-                        <span x-text="item.name"></span>
-                        <span x-text="item.checked"></span>
+                        <span x-text="item.name" x-bind:class="{ 'checked': item.checked }"></span>
                         <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                             <i class="material-icons">delete</i>
                         </button>
