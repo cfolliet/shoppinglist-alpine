@@ -37,10 +37,14 @@
         <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
             <i class="material-icons">add</i>
         </button>
+        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="visibility">
+            <input type="checkbox" id="visibility" class="mdl-icon-toggle__input" x-model="displayAll" x-bind:checked="!displayAll">
+            <i class="mdl-icon-toggle__label material-icons">visibility</i>
+          </label>
 
         <ul class="mdl-list" x-on:click.once="update">
-            <template x-for="(item, index) in items" :key="item">
-                <li class="mdl-list__item" x-bind:data-index="index">
+            <template x-for="(item, index) in filteredItems()" :key="item">
+                <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
                     <span class="mdl-list__item-primary-content">
                         <span x-text="item.name" x-bind:class="{ 'checked': item.checked }"></span>
                         <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">

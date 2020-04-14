@@ -1,10 +1,21 @@
 const data = {
-    keyword: 'keyword',
+    keyword: '',
+    displayAll: false,
     items: [
         { name: 'aaaa', checked: false, hover: false },
         { name: 'bbb', checked: true, hover: false },
         { name: 'cc', checked: false, hover: false }
     ],
+    filteredItems: function () {
+        if (this.keyword.length > 0) {
+            return this.items.filter(i => i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
+        }
+        else if (!this.displayAll) {
+            return this.items.filter(i => !i.checked);
+        } else {
+            return this.items;
+        }
+    },
     add: function () {
         this.items.push({ name: this.keyword, checked: false });
     },
