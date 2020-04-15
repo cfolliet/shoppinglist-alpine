@@ -2,13 +2,14 @@ const data = {
     keyword: '',
     displayAll: false,
     items: [
-        { name: 'aaaa', checked: false, hover: false },
-        { name: 'bbb', checked: true, hover: false },
-        { name: 'cc', checked: false, hover: false }
+        { name: 'aaaa', checked: false },
+        { name: 'section', checked: false, section: true },
+        { name: 'bbb', checked: true },
+        { name: 'cc', checked: false }
     ],
     filteredItems: function () {
         if (this.keyword.length > 0) {
-            return this.items.filter(i => i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
+            return this.items.filter(i => i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
         }
         else if (!this.displayAll) {
             return this.items.filter(i => !i.checked);
@@ -17,8 +18,13 @@ const data = {
         }
     },
     add: function () {
-        const name = this.keyword.trim();
-        this.items.push({ name: name, checked: false });
+        let name = this.keyword.trim();
+        let isSection = false;
+        if (name.startsWith('#')) {
+            name = name.substring(1);
+            isSection = true;
+        }
+        this.items.push({ name: name, checked: false, section: isSection });
         this.keyword = '';
         document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },

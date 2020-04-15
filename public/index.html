@@ -28,7 +28,10 @@
             opacity: 0.5;
             text-decoration: line-through;
         }
-
+        .section {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
         .action-bar{
             position: absolute;
             bottom: 0px;;
@@ -42,7 +45,7 @@
             <template x-for="(item, index) in filteredItems()" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
                     <span class="mdl-list__item-primary-content">
-                        <span x-text="item.name" x-bind:class="{ 'checked': item.checked }"></span>
+                        <span x-text="item.name" x-bind:class="{ 'checked': item.checked, 'section': item.section }"></span>
                         <button x-show="item.hover" x-on:click="remove(index)"
                             class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                             <i class="material-icons">delete</i>
@@ -54,7 +57,7 @@
         <div class="action-bar">
             <div class="mdl-textfield mdl-js-textfield">
                 <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
-                <label class="mdl-textfield__label" for="keyword">Item...</label>
+                <label class="mdl-textfield__label" for="keyword">Item or #Section...</label>
             </div>
             <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                 <i class="material-icons">add</i>
