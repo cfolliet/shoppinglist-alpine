@@ -17,7 +17,10 @@ const data = {
         }
     },
     add: function () {
-        this.items.push({ name: this.keyword, checked: false });
+        const name = this.keyword.trim();
+        this.items.push({ name: name, checked: false });
+        this.keyword = '';
+        document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
     remove: function (index) {
         this.items.splice(index, 1);

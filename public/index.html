@@ -21,39 +21,51 @@
     <script src="js/main.js"></script>
 
     <style>
+        #app {
+            padding: 25px;
+        }
         .checked {
-          opacity: 0.5;  
-          text-decoration: line-through;
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .action-bar{
+            position: absolute;
+            bottom: 0px;;
         }
     </style>
 </head>
 
 <body>
     <div id="app" x-data="data" x-init="() => { registerSwipe() }">
-        <div class="mdl-textfield mdl-js-textfield">
-            <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
-            <label class="mdl-textfield__label" for="keyword">Item...</label>
-        </div>
-        <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
-            <i class="material-icons">add</i>
-        </button>
-        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="visibility">
-            <input type="checkbox" id="visibility" class="mdl-icon-toggle__input" x-model="displayAll" x-bind:checked="!displayAll">
-            <i class="mdl-icon-toggle__label material-icons">visibility</i>
-          </label>
-
         <ul class="mdl-list" x-on:click.once="update">
             <template x-for="(item, index) in filteredItems()" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
                     <span class="mdl-list__item-primary-content">
                         <span x-text="item.name" x-bind:class="{ 'checked': item.checked }"></span>
-                        <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                        <button x-show="item.hover" x-on:click="remove(index)"
+                            class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                             <i class="material-icons">delete</i>
                         </button>
                     </span>
                 </li>
             </template>
         </ul>
+        <div class="action-bar">
+            <div class="mdl-textfield mdl-js-textfield">
+                <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
+                <label class="mdl-textfield__label" for="keyword">Item...</label>
+            </div>
+            <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                <i class="material-icons">add</i>
+            </button>
+            <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="visibility">
+                <input type="checkbox" id="visibility" class="mdl-icon-toggle__input" x-model="displayAll"
+                    x-bind:checked="!displayAll">
+                <i class="mdl-icon-toggle__label material-icons">visibility</i>
+            </label>
+        </div>
     </div>
 </body>
+
 </html>
