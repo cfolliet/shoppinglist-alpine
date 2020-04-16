@@ -5,6 +5,7 @@ const data = {
         { name: 'aaaa', checked: false },
         { name: 'section', section: true },
         { name: 'bbb', checked: true },
+        { name: 'section 2', section: true },
         { name: 'cc', checked: false }
     ],
     filteredItems: function () {
@@ -12,7 +13,17 @@ const data = {
             return this.items.filter(i => i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
         }
         else if (!this.displayAll) {
-            return this.items.filter(i => !i.checked);
+            return this.items.filter((i, index, array) => {
+                if (!i.section) {
+                    return !i.checked
+                } else {
+                    const nextSectionIndex = array.findIndex((i2, index2) => i2.section && index2 > index);
+                    const result = array.some((i3, index3) => {
+                        return !i3.checked && index3 > index && (index3 < nextSectionIndex || nextSectionIndex == -1)
+                    });
+                    return result;
+                }
+            });
         } else {
             return this.items;
         }
