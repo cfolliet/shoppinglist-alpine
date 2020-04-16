@@ -79,6 +79,9 @@
                 <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
                 <label class="mdl-textfield__label" for="keyword">Item or #Section...</label>
             </div>
+            <button x-on:click="clear" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">clear</i>
+            </button>
             <button x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
                 <i class="material-icons">add</i>
             </button>

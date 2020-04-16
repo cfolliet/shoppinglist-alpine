@@ -36,11 +36,14 @@ const data = {
             isSection = true;
         }
         this.items.push({ name: name, checked: false, section: isSection });
-        this.keyword = '';
-        document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
+        this.clear();
     },
     remove: function (index) {
         this.items.splice(index, 1);
+    },
+    clear: function () {
+        this.keyword = '';
+        document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
     update: function () {
         // trick to refresh data when modified from the js
