@@ -56,6 +56,7 @@
 
         .pan {
             background-color: #EEE;
+            border-radius: 2px;
         }
     </style>
 </head>
@@ -67,10 +68,10 @@
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
                     <span class="mdl-list__item-primary-content">
                         <span x-text="item.name" x-bind:class="{ 'checked': item.checked, 'section': item.section }"></span>
-                        <button x-show="item.section && keyword.length" x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                        <button x-show="item.section && keyword.length" x-on:click="add" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                             <i class="material-icons">add</i>
                         </button>
-                        <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+                        <button x-show="item.hover" x-on:click="remove(index)" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                             <i class="material-icons">delete</i>
                         </button>
                     </span>
