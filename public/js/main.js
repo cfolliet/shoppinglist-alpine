@@ -3,7 +3,7 @@ const data = {
     displayAll: false,
     items: [
         { name: 'aaaa', checked: false },
-        { name: 'section', checked: false, section: true },
+        { name: 'section', section: true },
         { name: 'bbb', checked: true },
         { name: 'cc', checked: false }
     ],
@@ -40,6 +40,7 @@ const data = {
 function registerTouchActions() {
     const list = document.querySelector('ul');
     let li = null;
+    let item = null;
     let manager = new Hammer.Manager(list);
     let Press = new Hammer.Press();
     manager.add(Press);
@@ -51,18 +52,24 @@ function registerTouchActions() {
     manager.add(Pan);
     manager.on('panstart', function (e) {
         li = e.target.closest('li');
-        li.classList.add('pan');
+        item = data.items[li.getAttribute('data-index')];
+        if (!item.section) {
+            li.classList.add('pan');
+        }
     });
     manager.on('panmove', function (e) {
-        li.style.marginLeft = e.deltaX + "px";
+        if (!item.section) {
+            li.style.marginLeft = e.deltaX + "px";
+        }
     });
     manager.on('panend', function (e) {
-        li.classList.remove('pan');        
-        li.style.marginLeft = "0px";
+        if (!item.section) {
+            li.classList.remove('pan');
+            li.style.marginLeft = "0px";
 
-        if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
-            const item = data.items[li.getAttribute('data-index')];
-            item.checked = !item.checked;
+            if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
+                item.checked = !item.checked;
+            }
         }
-    })
+    });
 }
