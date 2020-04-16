@@ -28,14 +28,19 @@ const data = {
             return this.items;
         }
     },
-    add: function () {
+    add: function (e) {
         let name = this.keyword.trim();
         let isSection = false;
         if (name.startsWith('#')) {
             name = name.substring(1);
             isSection = true;
         }
-        this.items.push({ name: name, checked: false, section: isSection });
+
+        const li = e.target.closest('li');
+        const sectionIndex = li.getAttribute('data-index');
+        let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
+        nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
+        this.items.splice(nextSectionIndex , 0, { name: name, checked: false, section: isSection });
         this.clear();
     },
     remove: function (index) {
