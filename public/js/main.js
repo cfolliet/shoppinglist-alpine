@@ -37,21 +37,32 @@ const data = {
     }
 }
 
-function registerSwipe() {
+function registerTouchActions() {
     const list = document.querySelector('ul');
+    let li = null;
     let manager = new Hammer.Manager(list);
-    let Swipe = new Hammer.Swipe();
-    manager.add(Swipe);
-    manager.on('swipe', function (e) {
-        if (e.offsetDirection === 4 || e.offsetDirection === 2) { // todo replace the if with direction option on swipe
-            const item = data.items[e.target.closest('li').getAttribute('data-index')];
-            item.checked = !item.checked;
-        }
-    });
     let Press = new Hammer.Press();
     manager.add(Press);
     manager.on('press', function (e) {
         const item = data.items[e.target.closest('li').getAttribute('data-index')];
         item.hover = !item.hover;
+    })
+    let Pan = new Hammer.Pan();
+    manager.add(Pan);
+    manager.on('panstart', function (e) {
+        li = e.target.closest('li');
+        li.classList.add('pan');
+    });
+    manager.on('panmove', function (e) {
+        li.style.marginLeft = e.deltaX + "px";
+    });
+    manager.on('panend', function (e) {
+        li.classList.remove('pan');        
+        li.style.marginLeft = "0px";
+
+        if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
+            const item = data.items[li.getAttribute('data-index')];
+            item.checked = !item.checked;
+        }
     })
 }
