@@ -114,6 +114,7 @@ function registerTouchActions() {
             li.style.marginLeft = stats.distance + "px";
 
             if (stats.distance > 10 && stats.velocity > 0.3) {
+                window.clearTimeout(pressTimeout);
                 li.classList.add('checked');
             } else {
                 li.classList.remove('checked');
