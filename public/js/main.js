@@ -116,4 +116,10 @@ function registerTouchActions() {
             }
         }
     });
+    manager.on('pancancel', function (e) {
+        if (!item.section) {
+            li.style.marginLeft = "0px";
+            li.classList.remove('pan');
+        }
+    })
 }
