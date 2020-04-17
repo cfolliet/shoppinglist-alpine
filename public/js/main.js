@@ -1,3 +1,7 @@
+const SWIPE_DISTANCE = 25;
+const SWIPE_VELOCITY = 0.3;
+const PRESS_DURATION = 500;
+
 const data = {
     keyword: '',
     displayAll: false,
@@ -107,21 +111,24 @@ function registerTouchActions() {
             li.classList.add('pan');
         }
 
-        pressTimeout = setTimeout(handlePress, 250);
+        pressTimeout = setTimeout(handlePress, PRESS_DURATION);
     }
 
     function handleMove(e) {
         if (!item.section) {
             const stats = getStats(e);
-            li.style.marginLeft = stats.deltaX + "px";
 
-            if (stats.deltaX > 10 && stats.velocity > 0.3) {
-                li.classList.add('checked');
+            if (stats.deltaX > SWIPE_DISTANCE) {
+                li.style.marginLeft = stats.deltaX + "px";
+
+                if (stats.velocity > SWIPE_VELOCITY) {
+                    li.classList.add('checked');
+                }
             } else {
                 li.classList.remove('checked');
             }
 
-            if (stats.deltaY > 10 || stats.deltaY > 10) {
+            if (stats.deltaY > SWIPE_DISTANCE || stats.deltaY > SWIPE_DISTANCE) {
                 window.clearTimeout(pressTimeout);
             }
         }
@@ -135,7 +142,8 @@ function registerTouchActions() {
             li.style.marginLeft = "0px";
 
             const stats = getStats(e);
-            if (stats.deltaX > 10 && stats.velocity > 0.3) {
+            console.log('stats:', stats)
+            if (stats.deltaX > SWIPE_DISTANCE && stats.velocity > SWIPE_VELOCITY) {
                 item.checked = !item.checked;
             } else {
                 li.classList.remove('checked');
