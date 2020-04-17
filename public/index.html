@@ -60,8 +60,8 @@
 </head>
 
 <body>
-    <div id="app" x-data="data" x-init="() => { registerTouchActions() }">
-        <ul class="mdl-list" x-on:click.once="update">
+    <div id="app" x-data="data" x-init="() => { registerTouchActions(); update(); }">
+        <ul class="mdl-list">
             <template x-for="item in filteredItems()" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
                     <span class="mdl-list__item-primary-content">
