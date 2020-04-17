@@ -58,7 +58,7 @@ const data = {
         const sectionIndex = li.getAttribute('data-index');
         let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
         nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
-        this.items.splice(nextSectionIndex , 0, { name: name, checked: false, section: isSection });
+        this.items.splice(nextSectionIndex, 0, { name: name, checked: false, section: isSection });
         this.clear();
     },
     remove: function (index) {
@@ -85,7 +85,7 @@ function registerTouchActions() {
         const item = data.items[e.target.closest('li').getAttribute('data-index')];
         item.hover = !item.hover;
     })
-    let Pan = new Hammer.Pan({ direction : Hammer.DIRECTION_HORIZONTAL });
+    let Pan = new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL });
     manager.add(Pan);
     manager.on('panstart', function (e) {
         li = e.target.closest('li');
@@ -97,6 +97,11 @@ function registerTouchActions() {
     manager.on('panmove', function (e) {
         if (!item.section) {
             li.style.marginLeft = e.deltaX + "px";
+            if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
+                li.classList.add('checked');
+            } else {
+                li.classList.remove('checked');
+            }
         }
     });
     manager.on('panend', function (e) {
@@ -106,6 +111,8 @@ function registerTouchActions() {
 
             if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
                 item.checked = !item.checked;
+            } else {
+                li.classList.remove('checked');
             }
         }
     });
