@@ -78,48 +78,70 @@ function registerTouchActions() {
     const list = document.querySelector('ul');
     let li = null;
     let item = null;
-    let manager = new Hammer.Manager(list);
-    let Press = new Hammer.Press();
-    manager.add(Press);
-    manager.on('press', function (e) {
-        const item = data.items[e.target.closest('li').getAttribute('data-index')];
-        item.hover = !item.hover;
-    })
-    let Pan = new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL });
-    manager.add(Pan);
-    manager.on('panstart', function (e) {
+    let startPos = null;
+    let startTime = null;
+    let pressTimeout = null;
+
+    list.addEventListener("touchstart", handleStart, false);
+    list.addEventListener("touchend", handleEnd, false);
+    list.addEventListener("touchcancel", handleCancel, false);
+    list.addEventListener("touchmove", handleMove, false);
+
+    function getStats(e) {
+        const pos = e.changedTouches[0].clientX;
+        const distance = pos - startPos;
+        const duration = Date.now() - startTime;
+        const velocity = Math.abs(distance) / duration;
+        return { distance, duration, velocity }
+    }
+
+    function handleStart(e) {
         li = e.target.closest('li');
         item = data.items[li.getAttribute('data-index')];
+
         if (!item.section) {
+            startTime = Date.now();
+            startPos = e.targetTouches[0].clientX;
             li.classList.add('pan');
         }
-    });
-    manager.on('panmove', function (e) {
+
+        pressTimeout = setTimeout(handlePress, 250);
+    }
+
+    function handleMove(e) {
         if (!item.section) {
-            li.style.marginLeft = e.deltaX + "px";
-            if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
+            const stats = getStats(e);
+            li.style.marginLeft = stats.distance + "px";
+
+            if (stats.distance > 10 && stats.velocity > 0.3) {
                 li.classList.add('checked');
             } else {
                 li.classList.remove('checked');
             }
         }
-    });
-    manager.on('panend', function (e) {
+    }
+
+    function handleEnd(e) {
+        window.clearTimeout(pressTimeout);
+
         if (!item.section) {
             li.classList.remove('pan');
             li.style.marginLeft = "0px";
 
-            if (e.deltaX > 10 && e.overallVelocityX > 0.3) {
+            const stats = getStats(e);
+            if (stats.distance > 10 && stats.velocity > 0.3) {
                 item.checked = !item.checked;
             } else {
                 li.classList.remove('checked');
             }
         }
-    });
-    manager.on('pancancel', function (e) {
-        if (!item.section) {
-            li.style.marginLeft = "0px";
-            li.classList.remove('pan');
-        }
-    })
+    }
+
+    function handleCancel(e) {
+        console.log('cancel', e);
+    }
+
+    function handlePress() {
+        item.hover = !item.hover;
+    }
 }
