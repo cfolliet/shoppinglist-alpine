@@ -85,7 +85,7 @@ function registerTouchActions() {
         const item = data.items[e.target.closest('li').getAttribute('data-index')];
         item.hover = !item.hover;
     })
-    let Pan = new Hammer.Pan();
+    let Pan = new Hammer.Pan({ direction : Hammer.DIRECTION_HORIZONTAL });
     manager.add(Pan);
     manager.on('panstart', function (e) {
         li = e.target.closest('li');
