@@ -127,10 +127,10 @@ function registerTouchActions() {
             } else {
                 li.classList.remove('checked');
             }
+        }
 
-            if (stats.deltaY > SWIPE_DISTANCE || stats.deltaY > SWIPE_DISTANCE) {
-                window.clearTimeout(pressTimeout);
-            }
+        if (stats.deltaY > SWIPE_DISTANCE || stats.deltaY > SWIPE_DISTANCE) {
+            window.clearTimeout(pressTimeout);
         }
     }
 
