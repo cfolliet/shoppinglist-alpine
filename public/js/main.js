@@ -78,7 +78,8 @@ function registerTouchActions() {
     const list = document.querySelector('ul');
     let li = null;
     let item = null;
-    let startPos = null;
+    let startPosX = null;
+    let startPosY = null;
     let startTime = null;
     let pressTimeout = null;
 
@@ -88,11 +89,12 @@ function registerTouchActions() {
     list.addEventListener("touchmove", handleMove, false);
 
     function getStats(e) {
-        const pos = e.changedTouches[0].clientX;
-        const distance = pos - startPos;
+        const touch = e.changedTouches[0];
+        const deltaX = touch.clientX - startPosX;
+        const deltaY = touch.clientY - startPosY;
         const duration = Date.now() - startTime;
-        const velocity = Math.abs(distance) / duration;
-        return { distance, duration, velocity }
+        const velocity = Math.abs(deltaX) / duration;
+        return { deltaX, deltaY, duration, velocity }
     }
 
     function handleStart(e) {
@@ -101,7 +103,7 @@ function registerTouchActions() {
 
         if (!item.section) {
             startTime = Date.now();
-            startPos = e.targetTouches[0].clientX;
+            startPosX = e.targetTouches[0].clientX;
             li.classList.add('pan');
         }
 
@@ -111,13 +113,16 @@ function registerTouchActions() {
     function handleMove(e) {
         if (!item.section) {
             const stats = getStats(e);
-            li.style.marginLeft = stats.distance + "px";
+            li.style.marginLeft = stats.deltaX + "px";
 
-            if (stats.distance > 10 && stats.velocity > 0.3) {
-                window.clearTimeout(pressTimeout);
+            if (stats.deltaX > 10 && stats.velocity > 0.3) {
                 li.classList.add('checked');
             } else {
                 li.classList.remove('checked');
+            }
+
+            if (stats.deltaY > 10 || stats.deltaY > 10) {
+                window.clearTimeout(pressTimeout);
             }
         }
     }
@@ -130,7 +135,7 @@ function registerTouchActions() {
             li.style.marginLeft = "0px";
 
             const stats = getStats(e);
-            if (stats.distance > 10 && stats.velocity > 0.3) {
+            if (stats.deltaX > 10 && stats.velocity > 0.3) {
                 item.checked = !item.checked;
             } else {
                 li.classList.remove('checked');
