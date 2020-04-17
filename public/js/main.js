@@ -3,10 +3,28 @@ const data = {
     displayAll: false,
     items: [
         { name: 'aaaa', checked: false },
-        { name: 'section', section: true },
-        { name: 'bbb', checked: true },
+        { name: 'section 1', section: true },
+        { name: 'bbbbbbbb', checked: false },
+        { name: 'cc', checked: false },
+        { name: 'dddddd', checked: false },
+        { name: 'eeeeeee', checked: false },
+        { name: 'ffffff', checked: false },
+        { name: 'gggggg', checked: false },
         { name: 'section 2', section: true },
-        { name: 'cc', checked: false }
+        { name: 'hhhhhhhh', checked: false },
+        { name: 'iiiii', checked: false },
+        { name: 'jjjjjjjjj', checked: false },
+        { name: 'kkkkkk', checked: false },
+        { name: 'llllllll', checked: false },
+        { name: 'mmmmmmmmm', checked: false },
+        { name: 'nnnnnnnnn', checked: false },
+        { name: 'section 3', section: true },
+        { name: 'oooooooo', checked: false },
+        { name: 'ppppppppp', checked: false },
+        { name: 'qqqqqqq', checked: true },
+        { name: 'rrrrrrr', checked: false },
+        { name: 'ssssss', checked: false },
+        { name: 'tttttt', checked: false }
     ],
     filteredItems: function () {
         if (this.keyword.length > 0) {
