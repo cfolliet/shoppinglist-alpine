@@ -49,7 +49,7 @@
             font-weight: bold;
         }
 
-        :not(.section) {
+        .item {
             font-size: 20px;
             padding-left: 20px;
         }
@@ -71,10 +71,10 @@
     <div id="app" x-data="data" x-init="() => { registerTouchActions(); update(); }">
         <ul class="mdl-list">
             <template x-for="item in filteredItems()" :key="item">
-                <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)">
+                <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
+                    x-bind:class="{ 'checked': item.checked, 'section': item.section, 'item': !item.section }">
                     <span class="mdl-list__item-primary-content">
-                        <span x-text="item.name"
-                            x-bind:class="{ 'checked': item.checked, 'section': item.section }"></span>
+                        <span x-text="item.name"></span>
                         <button x-show="item.section && keyword.length" x-on:click="add"
                             class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
                             <i class="material-icons">add</i>
