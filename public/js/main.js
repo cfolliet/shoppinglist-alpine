@@ -1,4 +1,5 @@
-const SWIPE_DISTANCE = 100;
+const CHECK_DISTANCE = 100;
+const DISPLAY_CHECK_DISTANCE = 25;
 const PRESS_DURATION = 250;
 
 const data = {
@@ -118,14 +119,20 @@ function registerTouchActions() {
         if (!item.section) {
             li.style.marginLeft = stats.deltaX + "px";
 
-            if (stats.deltaX > SWIPE_DISTANCE) {
+            if (stats.deltaX > DISPLAY_CHECK_DISTANCE) {
+                li.classList.add('display-check');
+            } else {
+                li.classList.remove('display-check');
+            }
+
+            if (stats.deltaX > CHECK_DISTANCE) {
                 li.classList.add('checked');
             } else {
                 li.classList.remove('checked');
             }
         }
 
-        if (stats.deltaY > SWIPE_DISTANCE || stats.deltaY > SWIPE_DISTANCE) {
+        if (stats.deltaY > CHECK_DISTANCE || stats.deltaY > CHECK_DISTANCE) {
             window.clearTimeout(pressTimeout);
         }
     }
@@ -137,9 +144,10 @@ function registerTouchActions() {
             li.style.marginLeft = "0px";
 
             const stats = getStats(e);
-            if (stats.deltaX > SWIPE_DISTANCE) {
+            if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
             } else {
+                li.classList.remove('display-check');
                 li.classList.remove('checked');
             }
         }

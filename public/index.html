@@ -36,12 +36,6 @@
             background-color: #FAFAFA;
         }
 
-        .checked {
-            opacity: 0.5;
-            text-decoration: line-through;
-            font-style: italic;
-        }
-
         .section {
             color: #4a5a6a;
             text-transform: uppercase;
@@ -51,7 +45,30 @@
 
         .item {
             font-size: 20px;
-            padding-left: 20px;
+            padding-left: 40px;
+        }
+
+        .checked .item-content {
+            opacity: 0.5;
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
+        .check-indicator {
+            position: fixed;
+            left: 60px;
+        }
+
+        .display-check .check-indicator,
+        .display-check .check-indicator-uncheck,
+        .checked .check-indicator-checked {
+            display: inline;
+        }
+
+        .check-indicator-uncheck,
+        .check-indicator-checked,
+        .checked .check-indicator-uncheck {
+            display: none;
         }
 
         .action-bar {
@@ -69,15 +86,21 @@
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
                     x-bind:class="{ 'checked': item.checked, 'section': item.section, 'item': !item.section }">
                     <span class="mdl-list__item-primary-content">
-                        <span x-text="item.name"></span>
-                        <button x-show="item.section && keyword.length" x-on:click="add"
-                            class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                            <i class="material-icons">add</i>
-                        </button>
-                        <button x-show="item.hover" x-on:click="remove(items.indexOf(item))"
-                            class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                            <i class="material-icons">delete</i>
-                        </button>
+                        <div class="check-indicator" x-show="!item.section">
+                            <i class="material-icons check-indicator-uncheck">check_box_outline_blank</i>
+                            <i class="material-icons check-indicator-checked">check_box</i>
+                        </div>
+                        <div class="item-content">
+                            <span x-text="item.name"></span>
+                            <button x-show="item.section && keyword.length" x-on:click="add"
+                                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                <i class="material-icons">add</i>
+                            </button>
+                            <button x-show="item.hover" x-on:click="remove(items.indexOf(item))"
+                                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                <i class="material-icons">delete</i>
+                            </button>
+                        </div>
                     </span>
                 </li>
             </template>
