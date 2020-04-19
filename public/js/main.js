@@ -1,6 +1,5 @@
-const SWIPE_DISTANCE = 25;
-const SWIPE_VELOCITY = 0.3;
-const PRESS_DURATION = 500;
+const SWIPE_DISTANCE = 100;
+const PRESS_DURATION = 250;
 
 const data = {
     keyword: '',
@@ -108,22 +107,19 @@ function registerTouchActions() {
         if (!item.section) {
             startTime = Date.now();
             startPosX = e.targetTouches[0].clientX;
-            li.classList.add('pan');
         }
 
         pressTimeout = setTimeout(handlePress, PRESS_DURATION);
     }
 
     function handleMove(e) {
+        const stats = getStats(e);
+
         if (!item.section) {
-            const stats = getStats(e);
+            li.style.marginLeft = stats.deltaX + "px";
 
             if (stats.deltaX > SWIPE_DISTANCE) {
-                li.style.marginLeft = stats.deltaX + "px";
-
-                if (stats.velocity > SWIPE_VELOCITY) {
-                    li.classList.add('checked');
-                }
+                li.classList.add('checked');
             } else {
                 li.classList.remove('checked');
             }
@@ -138,12 +134,10 @@ function registerTouchActions() {
         window.clearTimeout(pressTimeout);
 
         if (!item.section) {
-            li.classList.remove('pan');
             li.style.marginLeft = "0px";
 
             const stats = getStats(e);
-            console.log('stats:', stats)
-            if (stats.deltaX > SWIPE_DISTANCE && stats.velocity > SWIPE_VELOCITY) {
+            if (stats.deltaX > SWIPE_DISTANCE) {
                 item.checked = !item.checked;
             } else {
                 li.classList.remove('checked');
