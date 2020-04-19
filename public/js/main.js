@@ -141,12 +141,11 @@ function registerTouchActions() {
         window.clearTimeout(pressTimeout);
 
         if (!item.section) {
-            li.style.marginLeft = "0px";
-
             const stats = getStats(e);
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
             } else {
+                li.style.marginLeft = "0px";
                 li.classList.remove('display-check');
                 li.classList.remove('checked');
             }
