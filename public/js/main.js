@@ -5,31 +5,7 @@ const PRESS_DURATION = 250;
 const data = {
     keyword: '',
     displayAll: false,
-    items: [
-        { name: 'aaaa', checked: false },
-        { name: 'section 1', section: true },
-        { name: 'bbbbbbbb', checked: false },
-        { name: 'cc', checked: false },
-        { name: 'dddddd', checked: false },
-        { name: 'eeeeeee', checked: false },
-        { name: 'ffffff', checked: false },
-        { name: 'gggggg', checked: false },
-        { name: 'section 2', section: true },
-        { name: 'hhhhhhhh', checked: false },
-        { name: 'iiiii', checked: false },
-        { name: 'jjjjjjjjj', checked: false },
-        { name: 'kkkkkk', checked: false },
-        { name: 'llllllll', checked: false },
-        { name: 'mmmmmmmmm', checked: false },
-        { name: 'nnnnnnnnn', checked: false },
-        { name: 'section 3', section: true },
-        { name: 'oooooooo', checked: false },
-        { name: 'ppppppppp', checked: false },
-        { name: 'qqqqqqq', checked: true },
-        { name: 'rrrrrrr', checked: false },
-        { name: 'ssssss', checked: false },
-        { name: 'tttttt', checked: false }
-    ],
+    items: [],
     filteredItems: function () {
         if (this.keyword.length > 0) {
             return this.items.filter(i => i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
@@ -160,3 +136,48 @@ function registerTouchActions() {
         item.hover = !item.hover;
     }
 }
+
+function getFirebase() {
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: process.env.FIREBASE_APIKEY,
+        authDomain: process.env.FIREBASE_AUTHDOMAIN,
+        databaseURL: process.env.FIREBASE_DATABASEURL,
+        projectId: process.env.FIREBASE_PROJECTID,
+        storageBucket: process.env.FIREBASE_STORAGEBUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID,
+        appId: process.env.FIREBASE_APPID
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    return firebase.firestore();
+}
+
+function load() {
+    var docRef = db.collection(collectionId).doc(docId);
+    docRef.onSnapshot(function (doc) {
+        if (doc.exists) {
+            data.items = JSON.parse(doc.data().value);
+        } else {
+            console.error("No such document!");
+        }
+    });
+};
+
+function save() {
+    db.collection(collectionId).doc(docId).set({
+        value: JSON.stringify(data.items)
+    })
+        .then(function () {
+            console.log("Document successfully written!");
+        })
+        .catch(function (error) {
+            console.error("Error writing document: ", error);
+        });
+}
+
+const db = getFirebase();
+const collectionId = 'lists';
+const docId = 'test';
+load();
