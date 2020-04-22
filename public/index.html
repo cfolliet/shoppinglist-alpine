@@ -26,6 +26,12 @@
             padding: 25px;
         }
 
+        .settings {
+            top: 20px;
+            right: 20px;
+            position: absolute;
+        }
+
         .mdl-list {
             padding: 0;
         }
@@ -73,6 +79,9 @@
 
 <body>
     <div id="app" x-data="data" x-init="init">
+        <button class="mdl-button mdl-js-button mdl-button--icon settings">
+            <i class="material-icons">settings</i>
+        </button>
         <ul class="mdl-list">
             <template x-for="item in filteredItems()" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
