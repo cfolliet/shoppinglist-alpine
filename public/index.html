@@ -88,8 +88,14 @@
                 x-bind:checked="!displaySettings">
             <i class="mdl-icon-toggle__label material-icons">settings</i>
         </label>
-        <div x-show="displaySettings" x-cloak>
-            admin !!!
+        <div id="panel-settings" x-show="displaySettings" x-cloak>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="accountKey" x-model="accountKey">
+                <label class="mdl-textfield__label" for="accountKey">Account Key...</label>
+            </div>
+            <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" x-on:click="saveSettings">
+                Save
+            </button>
         </div>
         <div x-show="!displaySettings" x-cloak>
             <ul class="mdl-list">

@@ -6,10 +6,10 @@ const PRESS_DURATION = 250;
 
 const db = getFirebase();
 const collectionId = 'lists';
-const docId = 'test';
 
 window.data = {
     displaySettings: false,
+    accountKey : '',
     keyword: '',
     displayAll: false,
     items: [],
@@ -46,19 +46,28 @@ window.data = {
         let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
         nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
         this.items.splice(nextSectionIndex, 0, { name: name, checked: false, section: isSection });
+        save();
         this.clear();
     },
     remove: function (index) {
         this.items.splice(index, 1);
+        save();
     },
     clear: function () {
         this.keyword = '';
         document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
     init: function () {
-        load().then(items => {
+        this.accountKey = localStorage.getItem('accountKey') || 'test';
+        load(this).then(items => {
             this.items = items;
             registerTouchActions(this);
+        });
+    },
+    saveSettings: function () {
+        localStorage.setItem('accountKey', this.accountKey);
+        load(this).then(items => {
+            this.items = items;
         });
     }
 }
@@ -157,12 +166,12 @@ function getFirebase() {
     return firebase.firestore();
 }
 
-function load() {
+function load(data) {
     return new Promise((resolve, reject) => {
-        let docRef = db.collection(collectionId).doc(docId);
+        let docRef = db.collection(collectionId).doc(data.accountKey);
         docRef.onSnapshot(function (doc) {
             if (doc.exists) {
-                resolve(JSON.parse(doc.data().value));
+                resolve(JSON.parse(doc.data().value || '[{"name":"section 1","section":true}]'));
             } else {
                 reject('No such document!')
                 console.error('No such document!');
@@ -172,7 +181,7 @@ function load() {
 };
 
 function save() {
-    db.collection(collectionId).doc(docId).set({
+    db.collection(collectionId).doc(data.accountKey).set({
         value: JSON.stringify(data.items)
     })
         .catch(function (error) {
