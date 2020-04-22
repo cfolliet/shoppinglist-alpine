@@ -1,8 +1,14 @@
+import firebaseConfig from './config.js';
+
 const CHECK_DISTANCE = 100;
 const DISPLAY_CHECK_DISTANCE = 25;
 const PRESS_DURATION = 250;
 
-const data = {
+const db = getFirebase();
+const collectionId = 'lists';
+const docId = 'test';
+
+window.data = {
     keyword: '',
     displayAll: false,
     items: [],
@@ -48,9 +54,9 @@ const data = {
         this.keyword = '';
         document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
-    update: function () {
-        // trick to refresh data when modified from the js
-        this.items = this.items;
+    init: function () {
+        load().then(items => this.items = items);
+        registerTouchActions();
     }
 }
 
@@ -118,10 +124,12 @@ function registerTouchActions() {
 
         if (!item.section) {
             const stats = getStats(e);
+            
+            li.style.marginLeft = "0px";
+            
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
             } else {
-                li.style.marginLeft = "0px";
                 li.classList.remove('display-check');
                 li.classList.remove('checked');
             }
@@ -138,30 +146,21 @@ function registerTouchActions() {
 }
 
 function getFirebase() {
-    // Your web app's Firebase configuration
-    var firebaseConfig = {
-        apiKey: process.env.FIREBASE_APIKEY,
-        authDomain: process.env.FIREBASE_AUTHDOMAIN,
-        databaseURL: process.env.FIREBASE_DATABASEURL,
-        projectId: process.env.FIREBASE_PROJECTID,
-        storageBucket: process.env.FIREBASE_STORAGEBUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGINGSENDERID,
-        appId: process.env.FIREBASE_APPID
-    };
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-
     return firebase.firestore();
 }
 
 function load() {
-    var docRef = db.collection(collectionId).doc(docId);
-    docRef.onSnapshot(function (doc) {
-        if (doc.exists) {
-            data.items = JSON.parse(doc.data().value);
-        } else {
-            console.error("No such document!");
-        }
+    return new Promise((resolve, reject) => {
+        let docRef = db.collection(collectionId).doc(docId);
+        docRef.onSnapshot(function (doc) {
+            if (doc.exists) {
+                resolve(JSON.parse(doc.data().value));
+            } else {
+                reject('No such document!')
+                console.error('No such document!');
+            }
+        });
     });
 };
 
@@ -176,8 +175,3 @@ function save() {
             console.error("Error writing document: ", error);
         });
 }
-
-const db = getFirebase();
-const collectionId = 'lists';
-const docId = 'test';
-load();
