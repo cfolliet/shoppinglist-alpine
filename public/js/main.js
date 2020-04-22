@@ -109,9 +109,12 @@ function registerTouchActions(items) {
                 li.classList.remove('display-check');
             }
 
-            if (stats.deltaX > CHECK_DISTANCE) {
+            const checked = item.checked;
+            const hasDistance = stats.deltaX > CHECK_DISTANCE;
+
+            if (!checked && hasDistance || checked && !hasDistance) {
                 li.classList.add('checked');
-            } else {
+            } else if(!checked && !hasDistance || checked && hasDistance) {
                 li.classList.remove('checked');
             }
         }
@@ -130,11 +133,11 @@ function registerTouchActions(items) {
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
                 save();
-            } else {
-                li.style.marginLeft = "0px";
-                li.classList.remove('display-check');
-                li.classList.remove('checked');
             }
+
+            li.classList.remove('display-check');
+            li.classList.remove('checked');
+            li.style.marginLeft = "0px";
         }
     }
 
