@@ -18,6 +18,10 @@
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
     <style>
+        [x-cloak] {
+            display: none;
+        }
+
         body {
             background-color: #FAFAFA;
         }
@@ -79,46 +83,53 @@
 
 <body>
     <div id="app" x-data="data" x-init="init">
-        <button class="mdl-button mdl-js-button mdl-button--icon settings">
-            <i class="material-icons">settings</i>
-        </button>
-        <ul class="mdl-list">
-            <template x-for="item in filteredItems()" :key="item">
-                <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
-                    x-bind:class="{ 'checked': item.checked, 'section': item.section, 'item': !item.section }">
-                    <span class="mdl-list__item-primary-content">
-                        <div class="check-indicator" x-show="!item.section">
-                            <i class="material-icons check-indicator-uncheck">check_box_outline_blank</i>
-                            <i class="material-icons check-indicator-checked">check_box</i>
-                        </div>
-                        <div class="item-content">
-                            <span x-text="item.name"></span>
-                            <button x-show="item.section && keyword.length" x-on:click="add"
-                                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">add</i>
-                            </button>
-                            <button x-show="item.hover" x-on:click="remove(items.indexOf(item))"
-                                class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-                                <i class="material-icons">delete</i>
-                            </button>
-                        </div>
-                    </span>
-                </li>
-            </template>
-        </ul>
-        <div class="action-bar">
-            <div class="mdl-textfield mdl-js-textfield">
-                <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
-                <label class="mdl-textfield__label" for="keyword">Item or #Section...</label>
+        <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect settings" for="settings" x-cloak>
+            <input type="checkbox" id="settings" class="mdl-icon-toggle__input" x-model="displaySettings"
+                x-bind:checked="!displaySettings">
+            <i class="mdl-icon-toggle__label material-icons">settings</i>
+        </label>
+        <div x-show="displaySettings" x-cloak>
+            admin !!!
+        </div>
+        <div x-show="!displaySettings" x-cloak>
+            <ul class="mdl-list">
+                <template x-for="item in filteredItems()" :key="item">
+                    <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
+                        x-bind:class="{ 'checked': item.checked, 'section': item.section, 'item': !item.section }">
+                        <span class="mdl-list__item-primary-content">
+                            <div class="check-indicator" x-show="!item.section">
+                                <i class="material-icons check-indicator-uncheck">check_box_outline_blank</i>
+                                <i class="material-icons check-indicator-checked">check_box</i>
+                            </div>
+                            <div class="item-content">
+                                <span x-text="item.name"></span>
+                                <button x-show="item.section && keyword.length" x-on:click="add"
+                                    class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                    <i class="material-icons">add</i>
+                                </button>
+                                <button x-show="item.hover" x-on:click="remove(items.indexOf(item))"
+                                    class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+                                    <i class="material-icons">delete</i>
+                                </button>
+                            </div>
+                        </span>
+                    </li>
+                </template>
+            </ul>
+            <div class="action-bar">
+                <div class="mdl-textfield mdl-js-textfield">
+                    <input class="mdl-textfield__input" type="text" id="keyword" x-model="keyword">
+                    <label class="mdl-textfield__label" for="keyword">Item or #Section...</label>
+                </div>
+                <button x-on:click="clear" class="mdl-button mdl-js-button mdl-button--icon">
+                    <i class="material-icons">clear</i>
+                </button>
+                <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="visibility">
+                    <input type="checkbox" id="visibility" class="mdl-icon-toggle__input" x-model="displayAll"
+                        x-bind:checked="!displayAll">
+                    <i class="mdl-icon-toggle__label material-icons">visibility</i>
+                </label>
             </div>
-            <button x-on:click="clear" class="mdl-button mdl-js-button mdl-button--icon">
-                <i class="material-icons">clear</i>
-            </button>
-            <label class="mdl-icon-toggle mdl-js-icon-toggle mdl-js-ripple-effect" for="visibility">
-                <input type="checkbox" id="visibility" class="mdl-icon-toggle__input" x-model="displayAll"
-                    x-bind:checked="!displayAll">
-                <i class="mdl-icon-toggle__label material-icons">visibility</i>
-            </label>
         </div>
     </div>
 </body>

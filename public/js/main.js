@@ -9,6 +9,7 @@ const collectionId = 'lists';
 const docId = 'test';
 
 window.data = {
+    displaySettings: false,
     keyword: '',
     displayAll: false,
     items: [],
@@ -114,7 +115,7 @@ function registerTouchActions(data) {
 
             if (!checked && hasDistance || checked && !hasDistance) {
                 li.classList.add('checked');
-            } else if(!checked && !hasDistance || checked && hasDistance) {
+            } else if (!checked && !hasDistance || checked && hasDistance) {
                 li.classList.remove('checked');
             }
         }
