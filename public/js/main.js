@@ -55,12 +55,14 @@ window.data = {
         document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
     init: function () {
-        load().then(items => this.items = items);
-        registerTouchActions();
+        load().then(items => {
+            this.items = items;
+            registerTouchActions(this.items);
+        });
     }
 }
 
-function registerTouchActions() {
+function registerTouchActions(items) {
     const list = document.querySelector('ul');
     let li = null;
     let item = null;
@@ -85,7 +87,7 @@ function registerTouchActions() {
 
     function handleStart(e) {
         li = e.target.closest('li');
-        item = data.items[li.getAttribute('data-index')];
+        item = items[li.getAttribute('data-index')];
 
         if (!item.section) {
             startTime = Date.now();
@@ -124,12 +126,12 @@ function registerTouchActions() {
 
         if (!item.section) {
             const stats = getStats(e);
-            
-            li.style.marginLeft = "0px";
-            
+
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
+                save();
             } else {
+                li.style.marginLeft = "0px";
                 li.classList.remove('display-check');
                 li.classList.remove('checked');
             }
@@ -168,9 +170,6 @@ function save() {
     db.collection(collectionId).doc(docId).set({
         value: JSON.stringify(data.items)
     })
-        .then(function () {
-            console.log("Document successfully written!");
-        })
         .catch(function (error) {
             console.error("Error writing document: ", error);
         });

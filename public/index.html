@@ -72,7 +72,7 @@
 </head>
 
 <body>
-    <div id="app" x-data="data" x-init="init()">
+    <div id="app" x-data="data" x-init="init">
         <ul class="mdl-list">
             <template x-for="item in filteredItems()" :key="item">
                 <li class="mdl-list__item" x-bind:data-index="items.indexOf(item)"
