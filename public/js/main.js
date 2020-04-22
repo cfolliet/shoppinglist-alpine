@@ -57,12 +57,12 @@ window.data = {
     init: function () {
         load().then(items => {
             this.items = items;
-            registerTouchActions(this.items);
+            registerTouchActions(this);
         });
     }
 }
 
-function registerTouchActions(items) {
+function registerTouchActions(data) {
     const list = document.querySelector('ul');
     let li = null;
     let item = null;
@@ -87,7 +87,7 @@ function registerTouchActions(items) {
 
     function handleStart(e) {
         li = e.target.closest('li');
-        item = items[li.getAttribute('data-index')];
+        item = data.items[li.getAttribute('data-index')];
 
         if (!item.section) {
             startTime = Date.now();
@@ -133,6 +133,7 @@ function registerTouchActions(items) {
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
                 save();
+                data.clear();
             }
 
             li.classList.remove('display-check');
