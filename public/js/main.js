@@ -113,12 +113,13 @@ function registerTouchActions(data) {
         const stats = getStats(e);
 
         if (!item.section) {
-            li.style.marginLeft = stats.deltaX + "px";
 
             if (stats.deltaX > DISPLAY_CHECK_DISTANCE) {
                 li.classList.add('display-check');
+                li.style.marginLeft = stats.deltaX + "px";
             } else {
                 li.classList.remove('display-check');
+                li.style.marginLeft = "0px";
             }
 
             const checked = item.checked;
