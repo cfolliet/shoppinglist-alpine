@@ -9,29 +9,31 @@ const collectionId = 'lists';
 
 window.data = {
     displaySettings: false,
-    accountKey : '',
+    accountKey: '',
     keyword: '',
     displayAll: false,
     items: [],
     filteredItems: function () {
         if (this.keyword.length > 0) {
-            return this.items.filter(i => i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
+            this.items.forEach(i => i.visible = i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
         }
         else if (!this.displayAll) {
-            return this.items.filter((i, index, array) => {
+            this.items.forEach((i, index, array) => {
                 if (!i.section) {
-                    return !i.checked
+                    i.visible = !i.checked
                 } else {
                     const nextSectionIndex = array.findIndex((i2, index2) => i2.section && index2 > index);
                     const result = array.some((i3, index3) => {
                         return !i3.checked && index3 > index && (index3 < nextSectionIndex || nextSectionIndex == -1)
                     });
-                    return result;
+                    i.visible = result;
                 }
             });
         } else {
-            return this.items;
+            this.items.forEach(i => i.visible = true);
         }
+
+        return this.items;
     },
     add: function (e) {
         let name = this.keyword.trim();
