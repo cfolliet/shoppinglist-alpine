@@ -1,0 +1,62 @@
+[x-cloak] {
+    display: none;
+}
+
+body {
+    background-color: #FAFAFA;
+}
+
+#app {
+    padding: 25px;
+}
+
+.settings {
+    top: 20px;
+    right: 20px;
+    position: absolute;
+}
+
+.mdl-list {
+    padding: 0;
+    margin-bottom: 40px;
+}
+
+.section {
+    color: #4a5a6a;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.item {
+    font-size: 20px;
+    padding-left: 40px;
+}
+
+.checked .item-content {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.check-indicator {
+    position: absolute;
+    left: 60px;
+}
+
+.display-check .check-indicator,
+.display-check .check-indicator-uncheck,
+.checked.display-check .check-indicator-checked {
+    display: inline;
+}
+
+.check-indicator-uncheck,
+.check-indicator-checked,
+.checked .check-indicator-uncheck {
+    display: none;
+}
+
+.action-bar {
+    position: fixed;
+    bottom: 0px;
+    background-color: #FAFAFA;
+}
