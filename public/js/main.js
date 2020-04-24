@@ -2,7 +2,6 @@ import firebaseConfig from './config.js';
 
 const CHECK_DISTANCE = 100;
 const DISPLAY_CHECK_DISTANCE = 25;
-const PRESS_DURATION = 250;
 
 const db = getFirebase();
 const collectionId = 'lists';
@@ -79,9 +78,6 @@ function registerTouchActions(data) {
     let li = null;
     let item = null;
     let startPosX = null;
-    let startPosY = null;
-    let startTime = null;
-    let pressTimeout = null;
 
     list.addEventListener("touchstart", handleStart, false);
     list.addEventListener("touchend", handleEnd, false);
@@ -89,12 +85,8 @@ function registerTouchActions(data) {
     list.addEventListener("touchmove", handleMove, false);
 
     function getStats(e) {
-        const touch = e.changedTouches[0];
-        const deltaX = touch.clientX - startPosX;
-        const deltaY = touch.clientY - startPosY;
-        const duration = Date.now() - startTime;
-        const velocity = Math.abs(deltaX) / duration;
-        return { deltaX, deltaY, duration, velocity }
+        const deltaX = e.changedTouches[0].clientX - startPosX;
+        return { deltaX }
     }
 
     function handleStart(e) {
@@ -102,11 +94,8 @@ function registerTouchActions(data) {
         item = data.items[li.getAttribute('data-index')];
 
         if (!item.section) {
-            startTime = Date.now();
             startPosX = e.targetTouches[0].clientX;
         }
-
-        pressTimeout = setTimeout(handlePress, PRESS_DURATION);
     }
 
     function handleMove(e) {
@@ -131,18 +120,13 @@ function registerTouchActions(data) {
                 li.classList.remove('checked');
             }
         }
-
-        if (stats.deltaY > CHECK_DISTANCE || stats.deltaY > CHECK_DISTANCE) {
-            window.clearTimeout(pressTimeout);
-        }
     }
 
     function handleEnd(e) {
-        window.clearTimeout(pressTimeout);
-
-        if (!item.section) {
-            const stats = getStats(e);
-
+        const stats = getStats(e);
+        if (stats.deltaX < -CHECK_DISTANCE) {
+            item.hover = !item.hover;
+        } else if (!item.section) {
             if (stats.deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
                 save();
@@ -157,10 +141,6 @@ function registerTouchActions(data) {
 
     function handleCancel(e) {
         console.log('cancel', e);
-    }
-
-    function handlePress() {
-        item.hover = !item.hover;
     }
 }
 
