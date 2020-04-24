@@ -1,10 +1,7 @@
-import firebaseConfig from './config.js';
+import { load, save } from './firebase.js';
 
 const CHECK_DISTANCE = 100;
 const DISPLAY_CHECK_DISTANCE = 25;
-
-const db = getFirebase();
-const collectionId = 'lists';
 
 window.data = {
     displaySettings: false,
@@ -47,12 +44,12 @@ window.data = {
         let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
         nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
         this.items.splice(nextSectionIndex, 0, { name: name, checked: false, section: isSection });
-        save();
+        save(this.accountKey, this.items);
         this.clear();
     },
     remove: function (index) {
         this.items.splice(index, 1);
-        save();
+        save(this.accountKey, this.items);
     },
     clear: function () {
         this.keyword = '';
@@ -60,14 +57,14 @@ window.data = {
     },
     init: function () {
         this.accountKey = localStorage.getItem('accountKey') || 'test';
-        load(this).then(items => {
+        load(this.accountKey).then(items => {
             this.items = items;
             registerTouchActions(this);
         });
     },
     saveSettings: function () {
         localStorage.setItem('accountKey', this.accountKey);
-        load(this).then(items => {
+        load(this.accountKey).then(items => {
             this.items = items;
         });
     }
@@ -120,7 +117,7 @@ function registerTouchActions(data) {
         } else if (!item.section) {
             if (deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
-                save();
+                save(data.accountKey, data.items);
                 data.clear();
             }
 
@@ -128,32 +125,4 @@ function registerTouchActions(data) {
             li.style.marginLeft = "0px";
         }
     }
-}
-
-function getFirebase() {
-    firebase.initializeApp(firebaseConfig);
-    return firebase.firestore();
-}
-
-function load(data) {
-    return new Promise((resolve, reject) => {
-        let docRef = db.collection(collectionId).doc(data.accountKey);
-        docRef.onSnapshot(function (doc) {
-            if (doc.exists) {
-                resolve(JSON.parse(doc.data().value || '[{"name":"section 1","section":true}]'));
-            } else {
-                reject('No such document!')
-                console.error('No such document!');
-            }
-        });
-    });
-};
-
-function save() {
-    db.collection(collectionId).doc(data.accountKey).set({
-        value: JSON.stringify(data.items)
-    })
-        .catch(function (error) {
-            console.error("Error writing document: ", error);
-        });
 }
