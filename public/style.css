@@ -31,6 +31,7 @@ body {
 .item {
     font-size: 20px;
     padding-left: 40px;
+    white-space: nowrap;
 }
 
 .checked .item-content {
@@ -53,6 +54,11 @@ body {
 .check-indicator-checked,
 .checked .check-indicator-uncheck {
     display: none;
+}
+
+.button-delete {
+    position: absolute;
+    right: 20px;
 }
 
 .action-bar {
