@@ -74,45 +74,35 @@ window.data = {
 }
 
 function registerTouchActions(data) {
-    const list = document.querySelector('ul');
     let li = null;
     let item = null;
     let startPosX = null;
 
-    list.addEventListener("touchstart", handleStart, false);
-    list.addEventListener("touchend", handleEnd, false);
-    list.addEventListener("touchcancel", handleCancel, false);
-    list.addEventListener("touchmove", handleMove, false);
-
-    function getStats(e) {
-        const deltaX = e.changedTouches[0].clientX - startPosX;
-        return { deltaX }
-    }
+    const list = document.querySelector('ul');
+    list.addEventListener("touchstart", handleStart);
+    list.addEventListener("touchend", handleEnd);
+    list.addEventListener("touchmove", handleMove);
 
     function handleStart(e) {
         li = e.target.closest('li');
         item = data.items[li.getAttribute('data-index')];
-
-        if (!item.section) {
-            startPosX = e.targetTouches[0].clientX;
-        }
+        startPosX = e.targetTouches[0].clientX;
     }
 
     function handleMove(e) {
-        const stats = getStats(e);
-
         if (!item.section) {
+            const deltaX = e.changedTouches[0].clientX - startPosX;
 
-            if (stats.deltaX > DISPLAY_CHECK_DISTANCE) {
+            if (deltaX > DISPLAY_CHECK_DISTANCE) {
                 li.classList.add('display-check');
-                li.style.marginLeft = stats.deltaX + "px";
+                li.style.marginLeft = deltaX + "px";
             } else {
                 li.classList.remove('display-check');
                 li.style.marginLeft = "0px";
             }
 
             const checked = item.checked;
-            const hasDistance = stats.deltaX > CHECK_DISTANCE;
+            const hasDistance = deltaX > CHECK_DISTANCE;
 
             if (!checked && hasDistance || checked && !hasDistance) {
                 li.classList.add('checked');
@@ -123,24 +113,20 @@ function registerTouchActions(data) {
     }
 
     function handleEnd(e) {
-        const stats = getStats(e);
-        if (stats.deltaX < -CHECK_DISTANCE) {
+        const deltaX = e.changedTouches[0].clientX - startPosX;
+
+        if (deltaX < -CHECK_DISTANCE) {
             item.hover = !item.hover;
         } else if (!item.section) {
-            if (stats.deltaX > CHECK_DISTANCE) {
+            if (deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
                 save();
                 data.clear();
             }
 
-            li.classList.remove('display-check');
-            li.classList.remove('checked');
+            li.classList.remove('display-check', 'checked');
             li.style.marginLeft = "0px";
         }
-    }
-
-    function handleCancel(e) {
-        console.log('cancel', e);
     }
 }
 
