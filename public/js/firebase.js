@@ -8,30 +8,34 @@ const firebaseConfig = {
   appId: "1:782907887913:web:f606afcae9665f335fa738"
 };
 
+const collectionId = 'lists';
+
 function getFirebase() {
   firebase.initializeApp(firebaseConfig);
   return firebase.firestore();
 }
 
-export function load(collectionId, items) {
-  db.collection(collectionId)
-    .onSnapshot(function (querySnapshot) {
-      items.splice(0, items.length);
-      querySnapshot.forEach(function (doc) {
-        items.push(doc.data());
-      });
+export function load(docId) {
+  return new Promise((resolve, reject) => {
+    let docRef = db.collection(collectionId).doc(docId);
+    docRef.onSnapshot(function (doc) {
+      if (doc.exists) {
+        resolve(JSON.parse(doc.data().value || '[{"name":"section 1","section":true}]'));
+      } else {
+        reject('No such document!')
+        console.error('No such document!');
+      }
     });
-}
+  });
+};
 
-export function save(collectionId, docId, value) {
-  db.collection(collectionId).doc(docId).set(value)
+export function save(docId, value) {
+  db.collection(collectionId).doc(docId).set({
+    value: JSON.stringify(value)
+  })
     .catch(function (error) {
       console.error("Error writing document: ", error);
     });
-}
-
-export function remove(collectionId, docId) {
-  db.collection(collectionId).doc(docId).delete();
 }
 
 const db = getFirebase();

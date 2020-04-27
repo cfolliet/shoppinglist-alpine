@@ -1,4 +1,4 @@
-import { load, save, remove } from './firebase.js';
+import { load, save } from './firebase.js';
 
 const CHECK_DISTANCE = 100;
 const DISPLAY_CHECK_DISTANCE = 25;
@@ -43,14 +43,13 @@ window.data = {
         const sectionIndex = li.getAttribute('data-index');
         let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
         nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
-        const item = { name: name, checked: false, section: isSection };
-        this.items.splice(nextSectionIndex, 0, item);
-        save(data.accountKey, item.name, item);
+        this.items.splice(nextSectionIndex, 0, { name: name, checked: false, section: isSection });
+        save(this.accountKey, this.items);
         this.clear();
     },
-    remove: function (item) {
-        this.items.splice(this.items.indexOf(item), 1);
-        remove(data.accountKey, item.name);
+    remove: function (index) {
+        this.items.splice(index, 1);
+        save(this.accountKey, this.items);
     },
     clear: function () {
         this.keyword = '';
@@ -58,12 +57,16 @@ window.data = {
     },
     init: function () {
         this.accountKey = localStorage.getItem('accountKey') || 'test';
-        load(this.accountKey, this.items);
-        registerTouchActions(this);
+        load(this.accountKey).then(items => {
+            this.items = items;
+            registerTouchActions(this);
+        });
     },
     saveSettings: function () {
         localStorage.setItem('accountKey', this.accountKey);
-        load(this.accountKey, this.items);
+        load(this.accountKey).then(items => {
+            this.items = items;
+        });
     }
 }
 
@@ -114,7 +117,7 @@ function registerTouchActions(data) {
         } else if (!item.section) {
             if (deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
-                save(data.accountKey, item.name, item);
+                save(data.accountKey, data.items);
                 data.clear();
             }
 
