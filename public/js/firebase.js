@@ -18,9 +18,7 @@ export function load(collectionId, items) {
     .onSnapshot(function (querySnapshot) {
       items.splice(0, items.length);
       querySnapshot.forEach(function (doc) {
-        if (!doc.metadata.hasPendingWrites) {
-          items.push(doc.data());
-        }
+        items.push(doc.data());
       });
     });
 }
