@@ -58,16 +58,12 @@ window.data = {
     },
     init: function () {
         this.accountKey = localStorage.getItem('accountKey') || 'test';
-        load(this.accountKey).then(items => {
-            this.items = items;
-            registerTouchActions(this);
-        });
+        load(this.accountKey, this.items);
+        registerTouchActions(this);
     },
     saveSettings: function () {
         localStorage.setItem('accountKey', this.accountKey);
-        load(this.accountKey).then(items => {
-            this.items = items;
-        });
+        load(this.accountKey, this.items);
     }
 }
 

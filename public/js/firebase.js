@@ -13,18 +13,17 @@ function getFirebase() {
   return firebase.firestore();
 }
 
-export function load(collectionId) {
-  return new Promise((resolve, reject) => {
-    db.collection(collectionId)
-      .onSnapshot(function (querySnapshot) {
-        let data = [];
-        querySnapshot.forEach(function (doc) {
-          data.push(doc.data());
-        });
-        resolve(data.length ? data : [{ "name": "section 1", "section": true }]);
+export function load(collectionId, items) {
+  db.collection(collectionId)
+    .onSnapshot(function (querySnapshot) {
+      items.splice(0, items.length);
+      querySnapshot.forEach(function (doc) {
+        if (!doc.metadata.hasPendingWrites) {
+          items.push(doc.data());
+        }
       });
-  });
-};
+    });
+}
 
 export function save(collectionId, docId, value) {
   db.collection(collectionId).doc(docId).set(value)
