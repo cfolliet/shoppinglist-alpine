@@ -8,34 +8,33 @@ const firebaseConfig = {
   appId: "1:782907887913:web:f606afcae9665f335fa738"
 };
 
-const collectionId = 'lists';
-
 function getFirebase() {
   firebase.initializeApp(firebaseConfig);
   return firebase.firestore();
 }
 
-export function load(docId) {
+export function load(collectionId) {
   return new Promise((resolve, reject) => {
-    let docRef = db.collection(collectionId).doc(docId);
-    docRef.onSnapshot(function (doc) {
-      if (doc.exists) {
-        resolve(JSON.parse(doc.data().value || '[{"name":"section 1","section":true}]'));
-      } else {
-        reject('No such document!')
-        console.error('No such document!');
-      }
-    });
+    db.collection(collectionId)
+      .onSnapshot(function (querySnapshot) {
+        let data = [];
+        querySnapshot.forEach(function (doc) {
+          data.push(doc.data());
+        });
+        resolve(data.length ? data : [{ "name": "section 1", "section": true }]);
+      });
   });
 };
 
-export function save(docId, value) {
-  db.collection(collectionId).doc(docId).set({
-    value: JSON.stringify(value)
-  })
+export function save(collectionId, docId, value) {
+  db.collection(collectionId).doc(docId).set(value)
     .catch(function (error) {
       console.error("Error writing document: ", error);
     });
+}
+
+export function remove(collectionId, docId) {
+  db.collection(collectionId).doc(docId).delete();
 }
 
 const db = getFirebase();

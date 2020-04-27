@@ -1,4 +1,4 @@
-import { load, save } from './firebase.js';
+import { load, save, remove } from './firebase.js';
 
 const CHECK_DISTANCE = 100;
 const DISPLAY_CHECK_DISTANCE = 25;
@@ -43,13 +43,14 @@ window.data = {
         const sectionIndex = li.getAttribute('data-index');
         let nextSectionIndex = this.items.findIndex((i, index) => i.section && index > sectionIndex);
         nextSectionIndex = nextSectionIndex > 0 ? nextSectionIndex : this.items.length;
-        this.items.splice(nextSectionIndex, 0, { name: name, checked: false, section: isSection });
-        save(this.accountKey, this.items);
+        const item = { name: name, checked: false, section: isSection };
+        this.items.splice(nextSectionIndex, 0, item);
+        save(data.accountKey, item.name, item);
         this.clear();
     },
-    remove: function (index) {
-        this.items.splice(index, 1);
-        save(this.accountKey, this.items);
+    remove: function (item) {
+        this.items.splice(this.items.indexOf(item), 1);
+        remove(data.accountKey, item.name);
     },
     clear: function () {
         this.keyword = '';
@@ -117,7 +118,7 @@ function registerTouchActions(data) {
         } else if (!item.section) {
             if (deltaX > CHECK_DISTANCE) {
                 item.checked = !item.checked;
-                save(data.accountKey, data.items);
+                save(data.accountKey, item.name, item);
                 data.clear();
             }
 
