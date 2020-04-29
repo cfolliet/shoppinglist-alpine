@@ -103,7 +103,7 @@ function registerTouchActions(data) {
             const hasCheckDistance = deltaX > CHECK_DISTANCE;
 
             li.classList.toggle('checked', !checked && hasCheckDistance || checked && !hasCheckDistance);
-        } else {
+        } else if (!isSwipe) {
             const element = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
             const newHoverLi = element.closest('li');
             if (newHoverLi != hoverLi) {
