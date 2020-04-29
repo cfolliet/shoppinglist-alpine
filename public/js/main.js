@@ -68,7 +68,10 @@ window.data = {
 function registerTouchActions(data) {
     let li = null;
     let item = null;
+    let itemIndex = null;
     let startPosX = null;
+    let isSwipe = false;
+    let hoverLi = null;
 
     const list = document.querySelector('ul');
     list.addEventListener("touchstart", handleStart);
@@ -76,13 +79,20 @@ function registerTouchActions(data) {
     list.addEventListener("touchmove", handleMove);
 
     function handleStart(e) {
-        li = e.target.closest('li');
-        item = data.items[li.getAttribute('data-index')];
-        startPosX = e.targetTouches[0].clientX;
+        const target = e.target;
+        li = target.closest('li');
+        itemIndex = li.getAttribute('data-index');
+        item = data.items[itemIndex];
+        if (target.innerText == 'swap_vert') {
+            isSwipe = false;
+        } else {
+            isSwipe = true;
+            startPosX = e.targetTouches[0].clientX;
+        }
     }
 
     function handleMove(e) {
-        if (!item.section) {
+        if (isSwipe && !item.section) {
             const deltaX = e.changedTouches[0].clientX - startPosX;
 
             if (deltaX > DISPLAY_CHECK_DISTANCE) {
@@ -101,23 +111,48 @@ function registerTouchActions(data) {
             } else if (!checked && !hasDistance || checked && hasDistance) {
                 li.classList.remove('checked');
             }
+        } else {
+            const element = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+            const newHoverLi = element.closest('li');
+            if (newHoverLi != hoverLi) {
+                if (hoverLi != null) {
+                    hoverLi.classList.remove('sort-hover');
+                }
+                hoverLi = newHoverLi;
+                hoverLi.classList.add('sort-hover');
+            }
         }
     }
 
     function handleEnd(e) {
-        const deltaX = e.changedTouches[0].clientX - startPosX;
+        if (isSwipe) {
+            const deltaX = e.changedTouches[0].clientX - startPosX;
 
-        if (deltaX < -CHECK_DISTANCE) {
-            item.hover = !item.hover;
-        } else if (!item.section) {
-            if (deltaX > CHECK_DISTANCE) {
-                item.checked = !item.checked;
-                save(data.accountKey, data.items);
-                data.clear();
+            if (deltaX < -CHECK_DISTANCE) {
+                item.hover = !item.hover;
+            } else if (!item.section) {
+                if (deltaX > CHECK_DISTANCE) {
+                    item.checked = !item.checked;
+                    save(data.accountKey, data.items);
+                    data.clear();
+                }
+
+                li.classList.remove('display-check', 'checked');
+                li.style.marginLeft = "0px";
+            }
+        } else if (hoverLi != null) {
+            let destinationIndex = parseInt(hoverLi.getAttribute('data-index'));
+
+            if(destinationIndex < itemIndex) {
+                destinationIndex++;
             }
 
-            li.classList.remove('display-check', 'checked');
-            li.style.marginLeft = "0px";
+            hoverLi.classList.remove('sort-hover');
+            hoverLi = null;
+
+            item.hover = !item.hover;
+            data.items.splice(destinationIndex, 0, data.items.splice(itemIndex, 1)[0]);
+            // todo need to call save method
         }
     }
 }

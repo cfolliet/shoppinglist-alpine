@@ -53,6 +53,7 @@
                                 <i class="material-icons check-indicator-checked">check_box</i>
                             </div>
                             <div class="item-content">
+                                <i x-show="item.hover" class="mdl-icon-toggle__label material-icons button-sort">swap_vert</i>
                                 <span x-text="item.name"></span>
                                 <button x-show="item.section && keyword.length" x-on:click="add"
                                     class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">

@@ -56,6 +56,14 @@ body {
     display: none;
 }
 
+.button-sort {
+    color: rgb(63,81,181);
+}
+
+.sort-hover {
+    border-bottom: rgb(63,81,181) 1px solid;
+}
+
 .button-delete {
     position: absolute;
     right: 20px;
