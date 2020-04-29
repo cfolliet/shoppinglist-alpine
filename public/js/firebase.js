@@ -22,7 +22,7 @@ export function load(docId, items) {
       if (doc.exists) {
         const value = doc.data().value || [{ "name": "section 1", "section": true }, { "name": "item" }];
         items.splice(0, items.length);
-        value.forEach(v => items.push(v));
+        items.push(...value);
         resolve();
       } else {
         reject('No such document!')
