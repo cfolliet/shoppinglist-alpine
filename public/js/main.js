@@ -152,7 +152,8 @@ function registerTouchActions(data) {
 
             item.hover = !item.hover;
             data.items.splice(destinationIndex, 0, data.items.splice(itemIndex, 1)[0]);
-            // todo need to call save method
+            
+            save(data.accountKey, data.items);
         }
     }
 }
