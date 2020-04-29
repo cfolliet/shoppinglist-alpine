@@ -95,22 +95,14 @@ function registerTouchActions(data) {
         if (isSwipe && !item.section) {
             const deltaX = e.changedTouches[0].clientX - startPosX;
 
-            if (deltaX > DISPLAY_CHECK_DISTANCE) {
-                li.classList.add('display-check');
-                li.style.marginLeft = deltaX + "px";
-            } else {
-                li.classList.remove('display-check');
-                li.style.marginLeft = "0px";
-            }
+            const hasDisplayDistance = deltaX > DISPLAY_CHECK_DISTANCE;
+            li.classList.toggle('display-check', hasDisplayDistance);
+            li.style.marginLeft = hasDisplayDistance ? deltaX + "px" : "0px";
 
             const checked = item.checked;
-            const hasDistance = deltaX > CHECK_DISTANCE;
+            const hasCheckDistance = deltaX > CHECK_DISTANCE;
 
-            if (!checked && hasDistance || checked && !hasDistance) {
-                li.classList.add('checked');
-            } else if (!checked && !hasDistance || checked && hasDistance) {
-                li.classList.remove('checked');
-            }
+            li.classList.toggle('checked', !checked && hasCheckDistance || checked && !hasCheckDistance);
         } else {
             const element = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
             const newHoverLi = element.closest('li');
@@ -143,7 +135,7 @@ function registerTouchActions(data) {
         } else if (hoverLi != null) {
             let destinationIndex = parseInt(hoverLi.getAttribute('data-index'));
 
-            if(destinationIndex < itemIndex) {
+            if (destinationIndex < itemIndex) {
                 destinationIndex++;
             }
 
@@ -152,7 +144,7 @@ function registerTouchActions(data) {
 
             item.hover = !item.hover;
             data.items.splice(destinationIndex, 0, data.items.splice(itemIndex, 1)[0]);
-            
+
             save(data.accountKey, data.items);
         }
     }
