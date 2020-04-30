@@ -9,7 +9,7 @@ window.data = {
     keyword: '',
     displayAll: false,
     items: [],
-    filteredItems: function () {
+    filterItems: function () {
         if (this.keyword.length > 0) {
             this.items.forEach(i => i.visible = i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
         }
@@ -28,8 +28,6 @@ window.data = {
         } else {
             this.items.forEach(i => i.visible = true);
         }
-
-        return this.items;
     },
     add: function (e) {
         let name = this.keyword.trim();
@@ -50,18 +48,27 @@ window.data = {
     remove: function (index) {
         this.items.splice(index, 1);
         save(this.accountKey, this.items);
+        this.filterItems();
     },
     clear: function () {
         this.keyword = '';
         document.querySelector('.action-bar>.mdl-textfield').MaterialTextfield.change();
     },
+    refreshItems: function (items) {
+        this.items.splice(0, this.items.length);
+        this.items.push(...items);
+        this.filterItems();
+    },
     init: function () {
+        this.$watch('displayAll', () => this.filterItems());
+        this.$watch('keyword', () => this.filterItems());
         this.accountKey = localStorage.getItem('accountKey') || 'test';
-        load(this.accountKey, this.items).then(() => registerTouchActions(this));
+        load(this.accountKey, this.refreshItems, this);
+        registerTouchActions(this);
     },
     saveSettings: function () {
         localStorage.setItem('accountKey', this.accountKey);
-        load(this.accountKey, this.items)
+        load(this.accountKey, this.refreshItems, this);
     }
 }
 

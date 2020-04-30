@@ -15,20 +15,15 @@ function getFirebase() {
   return firebase.firestore();
 }
 
-export function load(docId, items) {
-  return new Promise((resolve, reject) => {
-    let docRef = db.collection(collectionId).doc(docId);
-    docRef.onSnapshot(function (doc) {
-      if (doc.exists) {
-        const value = doc.data().value || [{ "name": "section 1", "section": true }, { "name": "item" }];
-        items.splice(0, items.length);
-        items.push(...value);
-        resolve();
-      } else {
-        reject('No such document!')
-        console.error('No such document!');
-      }
-    });
+export function load(docId, refreshItems, context) {
+  let docRef = db.collection(collectionId).doc(docId);
+  docRef.onSnapshot(function (doc) {
+    if (doc.exists) {
+      const value = doc.data().value || [{ "name": "section 1", "section": true }, { "name": "item" }];
+      refreshItems.call(context, value);
+    } else {
+      console.error('No such document!');
+    }
   });
 };
 

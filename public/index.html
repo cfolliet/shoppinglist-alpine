@@ -44,7 +44,7 @@
         </div>
         <div x-show="!displaySettings" x-cloak>
             <ul class="mdl-list">
-                <template x-for="item in filteredItems()" :key="item">
+                <template x-for="item in items" :key="item">
                     <li class="mdl-list__item" x-show="item.visible" x-bind:data-index="items.indexOf(item)"
                         x-bind:class="{ 'checked': item.checked, 'section': item.section, 'item': !item.section }">
                         <span class="mdl-list__item-primary-content">
