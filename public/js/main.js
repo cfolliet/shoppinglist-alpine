@@ -63,12 +63,12 @@ window.data = {
         this.$watch('displayAll', () => this.filterItems());
         this.$watch('keyword', () => this.filterItems());
         this.accountKey = localStorage.getItem('accountKey') || 'test';
-        load(this.accountKey, this.refreshItems, this);
+        load(this.accountKey, this.refreshItems.bind(this));
         registerTouchActions(this);
     },
     saveSettings: function () {
         localStorage.setItem('accountKey', this.accountKey);
-        load(this.accountKey, this.refreshItems, this);
+        load(this.accountKey, this.refreshItems.bind(this));
     }
 }
 

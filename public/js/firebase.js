@@ -15,12 +15,12 @@ function getFirebase() {
   return firebase.firestore();
 }
 
-export function load(docId, refreshItems, context) {
+export function load(docId, refreshItems) {
   let docRef = db.collection(collectionId).doc(docId);
   docRef.onSnapshot(function (doc) {
     if (doc.exists) {
       const value = doc.data().value || [{ "name": "section 1", "section": true }, { "name": "item" }];
-      refreshItems.call(context, value);
+      refreshItems(value);
     } else {
       console.error('No such document!');
     }
