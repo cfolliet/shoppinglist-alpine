@@ -112,8 +112,8 @@ function registerTouchActions(data) {
             li.classList.toggle('checked', !checked && hasCheckDistance || checked && !hasCheckDistance);
         } else if (!isSwipe) {
             const element = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-            const newHoverLi = element.closest('li');
-            if (newHoverLi != hoverLi) {
+            const newHoverLi = element && element.closest('li');
+            if (newHoverLi && newHoverLi != hoverLi) {
                 if (hoverLi != null) {
                     hoverLi.classList.remove('sort-hover');
                 }
