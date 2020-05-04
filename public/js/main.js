@@ -9,25 +9,27 @@ window.data = {
     keyword: '',
     displayAll: false,
     items: [],
-    filterItems: function () {
+    getVisibility: function (item) {
+        const start = performance.now();
         if (this.keyword.length > 0) {
-            this.items.forEach(i => i.visible = i.section || i.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1);
+            return item.visible = item.section || item.name.toLowerCase().indexOf(this.keyword.toLowerCase()) > -1;
         }
-        else if (!this.displayAll) {
-            this.items.forEach((i, index, array) => {
-                if (!i.section) {
-                    i.visible = !i.checked
-                } else {
-                    const nextSectionIndex = array.findIndex((i2, index2) => i2.section && index2 > index);
-                    const result = array.some((i3, index3) => {
-                        return !i3.checked && index3 > index && (index3 < nextSectionIndex || nextSectionIndex == -1)
-                    });
-                    i.visible = result;
-                }
+
+        if (!this.displayAll) {
+            if (!item.section) {
+                return !item.checked;
+            }
+
+            const index = this.items.indexOf(item);
+            const nextSectionIndex = this.items.findIndex((i2, index2) => i2.section && index2 > index);
+            const result = this.items.some((i3, index3) => {
+                return !i3.checked && index3 > index && (index3 < nextSectionIndex || nextSectionIndex == -1)
             });
-        } else {
-            this.items.forEach(i => i.visible = true);
+
+            return result;
         }
+
+        return true;
     },
     add: function (e) {
         let name = this.keyword.trim();
@@ -48,7 +50,6 @@ window.data = {
     remove: function (index) {
         this.items.splice(index, 1);
         save(this.accountKey, this.items);
-        this.filterItems();
     },
     clear: function () {
         this.keyword = '';
@@ -57,11 +58,8 @@ window.data = {
     refreshItems: function (items) {
         this.items.splice(0, this.items.length);
         this.items.push(...items);
-        this.filterItems();
     },
     init: function () {
-        this.$watch('displayAll', () => this.filterItems());
-        this.$watch('keyword', () => this.filterItems());
         this.accountKey = localStorage.getItem('accountKey') || 'test';
         load(this.accountKey, this.refreshItems.bind(this));
         registerTouchActions(this);
